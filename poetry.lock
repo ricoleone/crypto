@@ -199,6 +199,14 @@ optional = false
 python-versions = ">=3.7"
 
 [[package]]
+name = "httpsproxy-urllib2"
+version = "1.0"
+description = "Python 2.5 urllib2 patched to use CONNECT for https proxies"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "idna"
 version = "3.4"
 description = "Internationalized Domain Names in Applications (IDNA)"
@@ -600,7 +608,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.10.0,<3.11"
-content-hash = "4f779015b71151ab9661571c410658af36d3252607f22d21bb0195d020f814b6"
+content-hash = "4f8c3fa3e94128ead17f881e9cd64b19a63107e1772024fb4bf12d187df9570d"
 
 [metadata.files]
 aiohttp = []
@@ -619,6 +627,7 @@ cryptography = []
 debugpy = []
 flask = []
 frozenlist = []
+httpsproxy-urllib2 = []
 idna = []
 iso8601 = []
 itsdangerous = []

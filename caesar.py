@@ -16,19 +16,19 @@ alpha_list = list(map(chr, range(97, 123)))
 #encrypt
 ct = ''
 for letter in secret:
-  index = ord(letter) - ord('a')
-  index = (index + radix)%26
+  #index = ord(letter) - ord('a')
+  #index = (index + radix )%26
   #ct += alpha_list[index]
-  ct += chr(index + ord('a'))
+  ct += chr((ord(letter) - ord('a') + radix + 26)%26 + ord('a'))
 print('cipher text =', ct)
 
 #decrypt
 pt = ''
 for letter in ct:
-  index = ord(letter) - ord('a')
-  index = (index - radix + 26)%26
+  #index = ord(letter) - ord('a')
+  #index = (index - radix + 26)%26
   #pt += alpha_list[index]
-  pt += chr(index + ord('a'))
+  pt += chr((ord(letter) - ord('a') - radix + 26)%26 + ord('a'))
 print('plain text =', pt)
 if secret == pt:
   print('winner winner chicken dinner')

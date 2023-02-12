@@ -1,8 +1,8 @@
 import urllib3
 
 http = urllib3.PoolManager()
-#response = http.request('GET', 'https://vip.udel.edu/crypto/mobydick.txt')
-response = http.request('GET', 'http://vip.udel.edu/crypto/encrypted_mobydick.txt')
+response = http.request('GET', 'https://vip.udel.edu/crypto/mobydick.txt')
+
 mobytext = response.data.decode('UTF-8')
 print('Mobytext ', len(mobytext), mobytext[17], )
 
