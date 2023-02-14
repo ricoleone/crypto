@@ -31,7 +31,7 @@ def decrypt(ct, key):
   for block in range(keysize):
     ciphertext[block] = ct[block * blocksize: block * blocksize + blocksize ]
   
-  #shuffle columns to be in alphabetical order of the key
+  #shuffle column order from alphabetical to the order of the key [word]
   alphaOrder = ''.join(sorted(key))
   finalciphertext = [''] * len(key)
   for i in range(len(key)):
