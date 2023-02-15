@@ -93,7 +93,7 @@ def test(plaintext = "THISISASHORTBLOCKOFTEXTTOSEEIFIGOTITRIGHTSNOWFOOBA", key =
 #              the file "mostfit.txt" in the current directory
 ####################################################################################
 def solve(ciphertext):
-  keys = permutations("01234567")
+  keys = permutations("0123456789")
   bestkey = ""
   highscore = 0
   solved = ""
@@ -112,9 +112,12 @@ def solve(ciphertext):
 
 print("testing solve")
 
-pt = "THISISASHORTBLOCKOFTEXTTOSEEIFIGOTITRIGHTSNOWFOOBARLIBERTYMENBAT"
-key = "640713528"
-ct = encrypt(pt, key)
+#pt = "THISISASHORTBLOCKOFTEXTTOSEEIFIGOTITRIGHTSNOWFOOBARLIBERTYME"
+ct = "nxhvbvkqyfxgzzmrgkgjqwrqrqdizzrcrpublrizptbvrckgsunalszixdbvgdquagbeqqhm"
+ct = ct.upper()
+print("plaint text lenght = ", len(ct) )
+#key = "6140873952"
+#ct = encrypt(pt, key)
 starttime = time.time()
 solve(ct)
 endtime = time.time()
