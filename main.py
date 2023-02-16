@@ -1,8 +1,42 @@
-#######################################################################################
-# Name: encrypt
-#######################################################################################
 from itertools import permutations
-import time
+import time, random
+
+# column encryt from Andy
+def col_trans(plain):
+    cols = int(9) #random.randint(8,10)
+    key = range(cols)
+    key = random.sample(key, k=len(key))
+    #print("KEY TYPE", type(key))
+    return "".join(plain[i::cols].upper() for i in key), key
+
+
+#######################################################################################
+# col_decrypt(ciphertext, key)
+######################################################################################
+def col_decrypt(cipher, key):
+  cols = len(key)
+  rows = int(len(cipher)/cols)
+  #separate cipher into coluns
+  columns = [cipher[i*rows:i*rows + rows ] for i in range(cols)]
+  #reorder columns back to the original order
+  tmp = [''] * cols
+  j = 0
+  for i in key:
+    tmp[i] = columns[j]
+    j +=1
+  columns = tmp
+  #columns = [insert(key, x) ]
+  #create the plain text by reading across rows
+  # read across each row to get the plaintext
+  pt = ""
+  for row in range(rows):
+    for column in range(cols):
+      pt += columns[column][row]
+  return pt
+
+#######################################################################################
+# Name: encryp
+#######################################################################################
 
 def encrypt(plaintext, key):
     ciphertext = [''] * len(key)
@@ -26,6 +60,8 @@ def encrypt(plaintext, key):
 # Name: decrypt
 #######################################################################################
 def decrypt(ct, key):
+  print("key in decrypt ", key)
+  #print("key type ", type(key))
   keysize = len(key)
   blocksize = int(len(ct)/keysize) 
   ciphertext = [''] * keysize
@@ -35,6 +71,7 @@ def decrypt(ct, key):
   
   #shuffle columns to be realigned with the key order
   alphaOrder = ''.join(sorted(key))
+  print("alphaOreder =", alphaOrder)
   finalciphertext = [''] * len(key)
   for i in range(len(key)):
     for j in range(len(key)):
@@ -55,7 +92,7 @@ def decrypt(ct, key):
 ####################################################################################
 def fitness(plaintext):
   ptlen = len(plaintext)
-  words = ["THE", "MAN", "MEN", "AND", "ING", "ENT", "ION", "HER", "FOR", "ONE", "THIS", "FIGHT", "COUNTRY", "LIBERTY", "DEATH", "TEXT", "SNOW"]
+  words = ["THE", "MAN", "MEN", "AND", "ING", "ENT", "ION", "HER", "FOR", "ONE", "THIS", "FIGHT", "COUNTRY", "LIBERTY", "DEATH", "LIVE"]
   score = 0
   for word in words:
     wordlen = len(word)
@@ -71,9 +108,16 @@ def fitness(plaintext):
 ####################################################################################
 def test(plaintext = "THISISASHORTBLOCKOFTEXTTOSEEIFIGOTITRIGHTSNOWFOOBA", key = "42031"):
   
-  ct = encrypt(plaintext, key)
-  pt = decrypt(ct, key)
-  
+  ct, ck = col_trans(plaintext)
+  #print("ct = ", ct)
+  #print("ck key =", ck)
+  #print("ck type ", type(ck))
+  temp = ""
+  for i in ck:
+    temp += chr(i + ord('0'))
+  print("tmp= ", temp)
+  key = temp
+  pt = col_decrypt(ct, ck)
   print("plaintext = ", plaintext)
   print("ct =        ", ct)
   print("pt =        ", pt)
@@ -93,13 +137,13 @@ def test(plaintext = "THISISASHORTBLOCKOFTEXTTOSEEIFIGOTITRIGHTSNOWFOOBA", key =
 #              the file "mostfit.txt" in the current directory
 ####################################################################################
 def solve(ciphertext):
-  keys = permutations("0123456789")
+  keys = permutations(range(9))
   bestkey = ""
   highscore = 0
   solved = ""
-  for i in list(keys):
-    key =  "".join(i)
-    pt = decrypt(ciphertext, key)
+  for key in list(keys):
+    #key =  "".join(i)
+    pt = col_decrypt(ciphertext, key)
     score = fitness(pt)
     if score > highscore:
       highscore = score
@@ -110,18 +154,24 @@ def solve(ciphertext):
   print(solved)
   
 
-print("testing solve")
+#print("testing solve")
 
 #pt = "THISISASHORTBLOCKOFTEXTTOSEEIFIGOTITRIGHTSNOWFOOBARLIBERTYME"
-ct = "nxhvbvkqyfxgzzmrgkgjqwrqrqdizzrcrpublrizptbvrckgsunalszixdbvgdquagbeqqhm"
-ct = ct.upper()
-print("plaint text lenght = ", len(ct) )
+pt = "nxhvbvkqyfxgzzmrgkgjqwrqrqdizzrcrpublrizptbvrckgsunalszixdbvgdquagbeqqhm"
+pt = pt.upper()
+print("plaint text lenght = ", len(pt) )
 #key = "6140873952"
-#ct = encrypt(pt, key)
+ct, ck = col_trans(pt)
 starttime = time.time()
 solve(ct)
 endtime = time.time()
 print("elapsed time: ", endtime - starttime)
+print("pt      = ", pt)
+print("ct      = ", ct)
+print("ck      = ", ck)
 
 #print("running test")
+#starttime= time.time()
 #test()
+#endtime = time.time()
+#print("elapsed time: ", endtime - starttime)
