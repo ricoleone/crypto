@@ -2,11 +2,11 @@ from itertools import permutations
 import time, random
 
 # column encryt from Andy
-def col_trans(plain):
-    cols = int(9) #random.randint(8,10)
-    key = range(cols)
-    key = random.sample(key, k=len(key))
-    #print("KEY TYPE", type(key))
+def col_trans(plain,ksize):
+    cols = int(ksize) #random.randint(8,10)
+    key = range(ksize)
+    key = random.sample(key, ksize)
+    # print("KEY TYPE", type(key))
     return "".join(plain[i::cols].upper() for i in key), key
 
 
@@ -16,17 +16,18 @@ def col_trans(plain):
 def col_decrypt(cipher, key):
   cols = len(key)
   rows = int(len(cipher)/cols)
-  #separate cipher into coluns
+  # separate cipher into coluns
   columns = [cipher[i*rows:i*rows + rows ] for i in range(cols)]
-  #reorder columns back to the original order
+  # reorder columns back to the original order based on digits in key
+  # where the value of each key digit maps the index of the current 
+  # ciphertext column to its index in plaintext
   tmp = [''] * cols
   j = 0
   for i in key:
     tmp[i] = columns[j]
     j +=1
   columns = tmp
-  #columns = [insert(key, x) ]
-  #create the plain text by reading across rows
+  # create the plain text by reading across rows
   # read across each row to get the plaintext
   pt = ""
   for row in range(rows):
@@ -47,7 +48,7 @@ def encrypt(plaintext, key):
         ciphertext[column] += plaintext[char]
         char += len(key)
     
-    #shuffle columns to be in alphabetical order of the key
+    # shuffle columns to be in alphabetical order of the key
     alphaOrder = ''.join(sorted(key))
     finalciphertext = [''] * len(key)
     for i in range(len(key)):
@@ -61,15 +62,15 @@ def encrypt(plaintext, key):
 #######################################################################################
 def decrypt(ct, key):
   print("key in decrypt ", key)
-  #print("key type ", type(key))
+  # print("key type ", type(key))
   keysize = len(key)
   blocksize = int(len(ct)/keysize) 
   ciphertext = [''] * keysize
-  #read blocks of text representing columns
+  # read blocks of text representing columns
   for block in range(keysize):
     ciphertext[block] = ct[block * blocksize: block * blocksize + blocksize ]
   
-  #shuffle columns to be realigned with the key order
+  # shuffle columns to be realigned with the key order
   alphaOrder = ''.join(sorted(key))
   print("alphaOreder =", alphaOrder)
   finalciphertext = [''] * len(key)
@@ -92,7 +93,7 @@ def decrypt(ct, key):
 ####################################################################################
 def fitness(plaintext):
   ptlen = len(plaintext)
-  words = ["THE", "MAN", "MEN", "AND", "ING", "ENT", "ION", "HER", "FOR", "ONE", "THIS", "FIGHT", "COUNTRY", "LIBERTY", "DEATH", "LIVE"]
+  words = ["BE", "TO", "OF","THE", "MAN", "MEN", "AND", "ING", "ENT", "ION", "HER", "HER", "FOR", "ONE", "THAT", "WITH","THIS", "FROM", "HAVE", "THEY", "WERE", "BEEN"]
   score = 0
   for word in words:
     wordlen = len(word)
@@ -106,12 +107,9 @@ def fitness(plaintext):
 # Name: test
 # Description: test the columnar decrypt and encrypt functions
 ####################################################################################
-def test(plaintext = "THISISASHORTBLOCKOFTEXTTOSEEIFIGOTITRIGHTSNOWFOOBA", key = "42031"):
+def test(plaintext = "THISISASHORTBLOCKOFTEXTTOSEEIFIGOTITRIGHTSNOWFOOBA", ksize = 5):
   
-  ct, ck = col_trans(plaintext)
-  #print("ct = ", ct)
-  #print("ck key =", ck)
-  #print("ck type ", type(ck))
+  ct, ck = col_trans(plaintext, ksize )
   temp = ""
   for i in ck:
     temp += chr(i + ord('0'))
@@ -136,42 +134,55 @@ def test(plaintext = "THISISASHORTBLOCKOFTEXTTOSEEIFIGOTITRIGHTSNOWFOOBA", key =
 # Output:      writes the top fitness scores and corresponding key value to
 #              the file "mostfit.txt" in the current directory
 ####################################################################################
-def solve(ciphertext):
-  keys = permutations(range(9))
-  bestkey = ""
+def solve(ciphertext, ksize):
+  f = open("mostfit.txt", "w")
   highscore = 0
-  solved = ""
+  bestkey = range(ksize)
+  solved  = ""
+  count = 0
+  
+  # loop through all permutations
+  keys = permutations(range(ksize))
   for key in list(keys):
-    #key =  "".join(i)
+    count +=1
     pt = col_decrypt(ciphertext, key)
     score = fitness(pt)
+    
+    # track the high scores
     if score > highscore:
       highscore = score
       bestkey = key
       solved  = pt
-      
-  print("high score: ", highscore, "key: ", bestkey)
+      f.write(str(score) + " " + str(key) + " " + "\n" + pt + "\n")
+    else:
+         if (score == highscore) | (score > (highscore - 5)):
+            f.write(str(score) + " " + str(key) + " " + "\n" + pt + "\n")
+
+  print("count: ", count, "high score: ", highscore, "key: ", bestkey)
   print(solved)
   
-
-#print("testing solve")
-
-#pt = "THISISASHORTBLOCKOFTEXTTOSEEIFIGOTITRIGHTSNOWFOOBARLIBERTYME"
-pt = "nxhvbvkqyfxgzzmrgkgjqwrqrqdizzrcrpublrizptbvrckgsunalszixdbvgdquagbeqqhm"
+# run or test the code
+SOLVE = False
+TEST  = True
+pt = "THISISASHORTBLOCKOFTEXTTOSEEIFIGOTITRIGHTSNOWFOOBARLIBERTYME"
 pt = pt.upper()
-print("plaint text lenght = ", len(pt) )
-#key = "6140873952"
-ct, ck = col_trans(pt)
-starttime = time.time()
-solve(ct)
-endtime = time.time()
-print("elapsed time: ", endtime - starttime)
-print("pt      = ", pt)
-print("ct      = ", ct)
-print("ck      = ", ck)
-
-#print("running test")
-#starttime= time.time()
-#test()
-#endtime = time.time()
-#print("elapsed time: ", endtime - starttime)
+if SOLVE:
+  f = open('BlackHatChallenge_01.txt', 'r')
+  ct = f.read()
+  ct = ct.upper()
+  padding = ''
+  ct += padding
+  print("cipher text length = ", len(ct) )
+  print("first char = ", ct[0])
+  print("ciphertext:\n", ct, "\n")
+  starttime = time.time()
+  solve(ct, 10)
+  endtime = time.time()
+  print("elapsed time: ", endtime - starttime)
+else:
+  if TEST:
+    print("running test")
+    starttime= time.time()
+    test()
+    endtime = time.time()
+    print("elapsed time: ", endtime - starttime)

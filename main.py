@@ -157,21 +157,28 @@ def solve(ciphertext):
 #print("testing solve")
 
 #pt = "THISISASHORTBLOCKOFTEXTTOSEEIFIGOTITRIGHTSNOWFOOBARLIBERTYME"
-pt = "nxhvbvkqyfxgzzmrgkgjqwrqrqdizzrcrpublrizptbvrckgsunalszixdbvgdquagbeqqhm"
-pt = pt.upper()
-print("plaint text lenght = ", len(pt) )
+#pt = "nxhvbvkqyfxgzzmrgkgjqwrqrqdizzrcrpublrizptbvrckgsunalszixdbvgdquagbeqqhm"
+#pt = pt.upper()
+#print("plaint text lenght = ", len(pt) )
 #key = "6140873952"
-ct, ck = col_trans(pt)
-starttime = time.time()
-solve(ct)
-endtime = time.time()
-print("elapsed time: ", endtime - starttime)
-print("pt      = ", pt)
-print("ct      = ", ct)
-print("ck      = ", ck)
+#ct, ck = col_trans(pt)
+#starttime = time.time()
+#solve(ct)
+#endtime = time.time()
+#print("elapsed time: ", endtime - starttime)
+#print("pt      = ", pt)
+#print("ct      = ", ct)
+#print("ck      = ", ck)
 
 #print("running test")
 #starttime= time.time()
 #test()
 #endtime = time.time()
 #print("elapsed time: ", endtime - starttime)
+columns = [ "one", "two", "three", "four"]
+#tmp = [''] * len(columns)
+key = [ 3, 2, 0, 1]
+tmp = [ columns[k] for k in key]
+print(columns)
+print(tmp)
+print([[x for x in range(3)] for y in range(4)])
