@@ -1,4 +1,4 @@
-import binascii, hashlib
+import binascii, hashlib, string
 
 hexascii = hashlib.sha256(b"andy").hexdigest()
 realhex = hashlib.sha256(b"andy").digest()
