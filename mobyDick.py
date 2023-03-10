@@ -8,6 +8,11 @@ print('Mobytext ', len(mobytext), mobytext[17], )
 
 onlyletters = ''.join(filter(lambda x: x.isalpha(), mobytext))
 
+loweronly = onlyletters.upper()
+
+f = open("MOBYDICK.txt", 'w')
+f.write(loweronly)
+f.close()
 loweronly = onlyletters.lower()
 print("onlyletters lenght = ", len(loweronly))
 frequency = {}
