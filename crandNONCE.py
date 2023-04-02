@@ -1,5 +1,5 @@
-import crypto
 import hashlib
+from Crypto.Util.number import *
 
 #PYTHON 2...
 

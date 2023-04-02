@@ -9,6 +9,9 @@
 # Author:      Rico Leone
 # Date:        February 28, 2023
 #######################################################################################
+from math import log10
+import itertools
+import frequency_analysis as fa
 def genQGRMS(Qfile, n=0 ):
   qgrams = {}
   f = open(Qfile, 'r')
